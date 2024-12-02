@@ -1,11 +1,14 @@
 <?php
-    include_once "Videoclub.php"; // No incluimos nada más
+    include_once "Videoclub.php"; 
+    include_once "Juego.php"; 
+    include_once "CintaVideo.php"; 
+    include_once "Dvd.php"; 
 
     $vc = new Videoclub("Severo 8A");
 
     //voy a incluir unos cuantos soportes de prueba
-    $vc->incluirJuego("God of War", 19.99, "PS4", 1, 1);
-    $vc->incluirJuego("The Last of Us Part II", 49.99, "PS4", 1, 1);
+    $vc->incluirJuego("God of War", 2, 19.99, "PS4", 1, 1);
+    $vc->incluirJuego("The Last of Us Part II", 2, 49.99, "PS4", 1, 1);
     $vc->incluirDvd("Torrente", 4.5, "es","16:9");
     $vc->incluirDvd("Origen", 4.5, "es,en,fr", "16:9");
     $vc->incluirDvd("El Imperio Contraataca", 3, "es,en","16:9");
