@@ -1,4 +1,6 @@
-<?php
+<?php 
+//INICIO ALBA
+//https://github.com/albamirandacarrasco/videoclubPHP
     include_once "Soporte.php";
     include_once "CintaVideo.php";
     include_once "Dvd.php";
