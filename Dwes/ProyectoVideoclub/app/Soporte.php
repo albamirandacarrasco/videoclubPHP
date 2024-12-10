@@ -1,13 +1,15 @@
 <?php
-namespace Dwes\ProyectoVideoclub;
-include_once 'Resumible.php';
+
+namespace Dwes\ProyectoVideoclub\app;
 
 //abstract class Soporte implements Resumible {
     class Soporte {
     public $titulo;
     public $precio;
     public $duracion;
+    public $numero;
     public static $IVA = 21;
+    public $alquilado = false;
 
     public function __construct($titulo, $numero, $precio) {
         $this->titulo = $titulo;
@@ -31,6 +33,7 @@ include_once 'Resumible.php';
         echo "<strong>Título:</strong> $this->titulo<br>";
         echo "<strong>Número:</strong> $this->numero<br>";
         echo "<strong>Precio:</strong> " . $this->getPrecio() . " euros<br>";
+        echo "<strong>Estado:</strong> " . ($this->alquilado ? "Alquilado" : "Disponible") . "<br>";
     }
 }
 ?>

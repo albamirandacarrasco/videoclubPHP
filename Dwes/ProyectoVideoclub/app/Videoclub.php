@@ -1,5 +1,10 @@
 <?php
-namespace Dwes\ProyectoVideoclub;
+
+namespace Dwes\ProyectoVideoclub\app;
+
+use Dwes\ProyectoVideoclub\Util\ClienteNoEncontradoException;
+use Dwes\ProyectoVideoclub\Util\SoporteNoEncontradoException;
+use Dwes\ProyectoVideoclub\Util\SoporteYaAlquilado;
 
 class Videoclub {
     private $nombre;
@@ -7,6 +12,8 @@ class Videoclub {
     private $numProductos = 0;
     private $socios = [];
     private $numSocios = 0;
+    private $numProductosAlquilados = 0; 
+    private $numTotalAlquileres = 0;
 
     public function __construct($nombre) {
         $this->nombre = $nombre;
@@ -36,15 +43,49 @@ class Videoclub {
 
     public function alquilaSocioProducto($numSocio, $numProducto): self {
         if (!isset($this->socios[$numSocio - 1])) {
-            echo "Error: Socio con número $numSocio no encontrado.<br>";
-            return $this; // Permitir encadenamiento
+            throw new ClienteNoEncontradoException("Error: Socio con número $numSocio no encontrado.");
         }
+
         if (!isset($this->productos[$numProducto - 1])) {
-            echo "Error: Producto con número $numProducto no encontrado.<br>";
-            return $this; 
+            throw new SoporteNoEncontradoException("Error: Producto con número $numProducto no encontrado.");
         }
-        $this->socios[$numSocio - 1]->alquilar($this->productos[$numProducto - 1]);
-        return $this; 
+
+        $producto = $this->productos[$numProducto - 1];
+        if ($producto->alquilado) {
+            throw new SoporteYaAlquiladoException("Error: El producto ya está alquilado.");
+        }
+
+        $this->socios[$numSocio - 1]->alquilar($producto);
+        $producto->alquilado = true;
+        $this->numProductosAlquilados++;
+        $this->numTotalAlquileres++;
+
+        return $this;
+    }
+
+    public function devolverSocioProducto($numSocio, $numProducto): self {
+        if (!isset($this->socios[$numSocio - 1])) {
+            throw new ClienteNoEncontradoException("Error: Socio con número $numSocio no encontrado.");
+        }
+
+        $producto = $this->productos[$numProducto - 1] ?? null;
+        if (!$producto || !$producto->alquilado) {
+            throw new SoporteNoEncontradoException("Error: Producto con número $numProducto no está alquilado.");
+        }
+
+        $this->socios[$numSocio - 1]->devolver($numProducto);
+        $producto->alquilado = false;
+        $this->numProductosAlquilados--;
+
+        return $this;
+    }
+
+    public function getNumProductosAlquilados(): int {
+        return $this->numProductosAlquilados;
+    }
+
+    public function getNumTotalAlquileres(): int {
+        return $this->numTotalAlquileres;
     }
 
     public function listarProductos() {

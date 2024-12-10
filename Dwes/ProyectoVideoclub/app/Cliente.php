@@ -1,5 +1,9 @@
 <?php
-namespace Dwes\ProyectoVideoclub;
+namespace Dwes\ProyectoVideoclub\app;
+
+use Dwes\ProyectoVideoclub\Util\SoporteYaAlquiladoException;
+use Dwes\ProyectoVideoclub\Util\CupoSuperadoException;
+use Dwes\ProyectoVideoclub\Util\SoporteNoEncontradoException;
 
 class Cliente {
     public $nombre;
@@ -26,18 +30,15 @@ class Cliente {
         return in_array($s, $this->soportesAlquilados, true);
     }
 
-    public function alquilar(Soporte $s): self {
+    public function alquilar(Soporte $s) {
         if ($this->tieneAlquilado($s)) {
-            echo "Ya tienes alquilado este soporte.<br>";
-            return $this; // Permitir encadenamiento
+            throw new SoporteYaAlquiladoException("El soporte ya está alquilado.");
         }
         if (count($this->soportesAlquilados) >= $this->maxAlquilerConcurrente) {
-            echo "No puedes alquilar más soportes.<br>";
-            return $this;
+            throw new CupoSuperadoException("Se ha superado el cupo máximo de alquileres.");
         }
         $this->soportesAlquilados[] = $s;
         $this->numSoportesAlquilados++;
-        echo "Soporte alquilado: {$s->titulo}.<br>";
         return $this;
     }
 
@@ -49,8 +50,7 @@ class Cliente {
                 return true;
             }
         }
-        echo "El soporte no está alquilado.<br>";
-        return false;
+        throw new SoporteNoEncontradoException("Error: El soporte con número $numSoporte no está alquilado.");
     }
 
     public function listaAlquileres() {

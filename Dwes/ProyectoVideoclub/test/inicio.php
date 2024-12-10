@@ -5,6 +5,7 @@
 //    include_once "CintaVideo.php";
 //    include_once "Dvd.php";
 //    include_once "Juego.php";
+include_once '../autoload.php';
 
     use Dwes\ProyectoVideoclub\app\Soporte;
     use Dwes\ProyectoVideoclub\app\CintaVideo;
